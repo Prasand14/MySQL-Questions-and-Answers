@@ -1,0 +1,15 @@
+WITH RECURSIVE tag_splitter as 
+	(SELECT id,
+		TRIM(SUBSTRING_INDEX(tags, ',', 1)) as tag_item,
+		SUBSTRING(tags, LENGTH(SUBSTRING_INDEX(tags, ',', 1))+2) AS remaining_tags
+	FROM products
+    UNION ALL
+    SELECT id,
+		TRIM(SUBSTRING_INDEX(remaining_tags, ',', 1)) as tag_item,
+		SUBSTRING(remaining_tags, LENGTH(SUBSTRING_INDEX(remaining_tags, ',', 1))+2) AS remaining_tags
+	FROM tag_splitter
+    WHERE remaining_tags <> ''
+    )
+    SELECT id, 
+	tag_item
+    FROM tag_splitter;
