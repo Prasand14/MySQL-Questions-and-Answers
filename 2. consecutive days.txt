@@ -1,0 +1,15 @@
+https://platform.stratascratch.com/coding/2054-consecutive-days?code_type=3
+
+WITH cte1 as (select user_id,
+    record_date,
+    DATE_SUB(record_date, INTERVAL ROW_NUMBER() OVER (PARTITION BY user_id ORDER BY record_date) DAY) as streak_id
+    from sf_events
+    GROUP BY 1, 2),
+cte2 as (SELECT user_id, 
+        streak_id, 
+        COUNT(*) AS days_length
+    FROM cte1
+    GROUP BY 1,2)
+SELECT DISTINCT user_id
+FROM cte2
+WHERE days_length>=3;
