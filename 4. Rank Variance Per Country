@@ -1,0 +1,22 @@
+https://platform.stratascratch.com/coding/2007-rank-variance-per-country?code_type=3
+
+WITH cte1 AS (select t2.country,
+    SUM(CASE WHEN DATE_FORMAT(t1.created_at, '%Y-%m-01') = '2019-12-01' then number_of_comments ELSE 0 END) as dec_total,
+    SUM(CASE WHEN DATE_FORMAT(t1.created_at, '%Y-%m-01') = '2020-01-01' then number_of_comments ELSE 0 END) AS jan_total
+from fb_comments_count t1
+LEFT JOIN fb_active_users t2
+    ON t1.user_id = t2.user_id
+WHERE t2.country IS NOT NULL
+GROUP BY 1),
+cte2 AS (SELECT 
+    country, 
+    jan_total, 
+    dec_total,
+    DENSE_RANK() OVER (ORDER BY jan_total DESC) as jan_rank,
+    DENSE_RANK() OVER (ORDER BY dec_total DESC) as dec_rank
+FROM cte1
+)
+SELECT country
+FROM cte2
+WHERE jan_total > dec_total
+and jan_rank < dec_rank;
