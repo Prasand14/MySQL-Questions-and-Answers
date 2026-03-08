@@ -1,0 +1,21 @@
+https://platform.stratascratch.com/coding/10172-best-selling-item?code_type=3
+
+WITH CTE1 AS (
+    select MONTH(invoicedate) as month,
+        description,
+        SUM(quantity * unitprice) AS total_paid
+    from online_retail
+    WHERE quantity > 0
+    GROUP BY 1,2
+    ),
+CTE2 AS (SELECT month, 
+    description, 
+    total_paid, 
+    ROW_NUMBER() OVER (PARTITION BY month ORDER BY total_paid DESC) as rnk
+FROM CTE1)
+SELECT month, 
+    description, 
+    total_paid
+FROM CTE2
+WHERE rnk = 1
+ORDER BY 1;
