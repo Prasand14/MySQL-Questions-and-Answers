@@ -1,0 +1,13 @@
+Day 11[March 14, 2026] - SQL
+https://datalemur.com/questions/frequently-purchased-pairs
+
+WITH CTE1 AS (SELECT transaction_id,
+  GROUP_CONCAT(DISTINCT product_id ORDER BY product_id SEPARATOR '","') combination
+  FROM transactions
+GROUP BY 1
+HAVING COUNT(DISTINCT product_id) >= 2)
+SELECT CONCAT('"', combination, '"') AS combination
+FROM CTE1
+GROUP BY 1
+ORDER BY 1
+;
