@@ -1,0 +1,15 @@
+Day 12[March 15, 2026] - SQL
+https://datalemur.com/questions/time-spent-snaps
+
+WITH CTE1 AS (SELECT t2.age_bucket,
+  SUM(CASE WHEN t1.activity_type in ('send','open') THEN time_spent ELSE 0 END) AS denom_total,
+  SUM(CASE WHEN t1.activity_type = 'send' THEN time_spent ELSE 0 END) AS send_total,
+  SUM(CASE WHEN t1.activity_type = 'open' THEN time_spent ELSE 0 END) as open_total
+FROM activities t1
+LEFT JOIN age_breakdown t2
+  ON t1.user_id = t2.user_id
+GROUP BY 1)
+SELECT age_bucket,
+  ROUND((send_total*100.0)/denom_total, 2) as send_perc,
+  ROUND((open_total*100.0)/denom_total, 2) as open_perc
+FROM CTE1;
