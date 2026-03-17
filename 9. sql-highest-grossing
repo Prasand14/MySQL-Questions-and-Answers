@@ -1,0 +1,20 @@
+Day 14[March 17, 2026] - SQL
+https://datalemur.com/questions/sql-highest-grossing
+
+WITH CTE1 AS (SELECT category, 
+  product, 
+  SUM(spend) AS total_spend
+FROM product_spend
+WHERE YEAR(transaction_date) = 2022
+GROUP BY 1,2),
+CTE2 AS (SELECT category, product, total_spend,
+  ROW_NUMBER() OVER (
+    PARTITION BY category 
+    ORDER BY total_spend desc) as rnk
+FROM CTE1)
+SELECT category, 
+  product, 
+  total_spend
+FROM CTE2
+WHERE rnk <= 2
+;
