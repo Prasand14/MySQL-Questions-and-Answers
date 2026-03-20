@@ -1,0 +1,17 @@
+Day 17[March 20, 2026] - SQL
+https://datalemur.com/questions/first-month-retention
+
+WITH CTE1 AS (SELECT user_id,
+  DATE_SUB(signup_date, INTERVAL WEEKDAY(signup_date) DAY) AS week_start_date,
+  CASE 
+      WHEN DATEDIFF(last_login, signup_date) <= 28 THEN 1
+      ELSE 0
+  END AS churn_status
+FROM users
+WHERE MONTH(signup_date) = 6 AND YEAR(signup_date) = 2022)
+SELECT DENSE_RANK() OVER (ORDER BY week_start_date) AS signup_week,
+ROUND(avg(churn_status)*100.0,2) as churn_rate
+FROM CTE1
+GROUP BY 1
+ORDER BY 1
+;
