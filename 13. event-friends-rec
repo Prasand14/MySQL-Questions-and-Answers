@@ -1,0 +1,25 @@
+*Day 18[March 2, 2026] - SQL*
+https://datalemur.com/questions/event-friends-rec
+
+WITH CTE1 as (SELECT user_id, event_id
+FROM event_rsvp
+WHERE attendance_status IN ('going', 'maybe')
+  AND event_type = 'private'),
+CTE2 AS (SELECT t1.user_id as user_a_id,
+t2.user_id as user_b_id,
+COUNT(t1.event_id) AS shared_events
+FROM CTE1 AS t1
+LEFT JOIN CTE1 AS t2
+ON t1.user_id <> t2.user_id
+  and t1.event_id = t2.event_id
+GROUP BY 1,2
+HAVING COUNT(t1.event_id) >= 2)
+SELECT tb1.user_a_id,
+tb1.user_b_id
+FROM CTE2 as tb1
+INNER JOIN friendship_status tb2
+  ON tb1.user_a_id = tb2.user_a_id
+    and tb1.user_b_id = tb2.user_b_id
+WHERE tb2.status = 'not_friends'
+ORDER BY 1,2;
+    
