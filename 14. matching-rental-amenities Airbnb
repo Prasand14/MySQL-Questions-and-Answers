@@ -1,0 +1,17 @@
+Day 19[March 22, 2026] - SQL
+https://datalemur.com/questions/matching-rental-amenities
+
+WITH CTE1 AS (SELECT rental_id,
+GROUP_CONCAT(amenity ORDER BY amenity SEPERATOR ',') AS amenities
+FROM rental_amenities
+GROUP BY 1),
+CTE2 AS (SELECT t1.rental_id AS rental_a, 
+  t2.rental_id AS rental_b
+FROM CTE1 AS t1
+  JOIN CTE1 AS t2
+  ON t1.amenities = t2.amenities
+    AND t1.rental_id < t2.rental_id
+)
+SELECT COUNT(*) AS matching_airbnb 
+FROM CTE2
+;
