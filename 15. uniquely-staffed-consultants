@@ -1,0 +1,15 @@
+Day 20[March 23, 2026] - SQL
+https://datalemur.com/questions/uniquely-staffed-consultants
+
+WITH CTE1 AS (SELECT t1.employee_id,
+  t2.client_name,
+  COUNT(DISTINCT t2.client_name) OVER (PARTITION BY t1.employee_id) AS total_client_count
+  FROM employees t1
+  JOIN consulting_engagements t2
+    ON t1.engagement_id = t2.engagement_id)
+SELECT client_name,
+COUNT(DISTINCT employee_id) AS total_consultants,
+SUM(CASE WHEN total_client_count = 1 THEN 1 ELSE 0 END) AS single_client_consultants
+FROM CTE1
+GROUP BY 1
+;
