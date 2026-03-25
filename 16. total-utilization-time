@@ -1,0 +1,13 @@
+Day 21[March 25, 2026] - SQL
+https://datalemur.com/questions/total-utilization-time
+
+WITH CTE1 AS (SELECT server_id,
+	session_status,
+	status_time as start_time,
+	LEAD(status_time,1) OVER (PARTITION BY server_id ORDER BY status_time) AS stop_time
+FROM server_utilization)
+SELECT FLOOR(SUM(TIMESTAMPDIFF(SECOND, start_time, stop_time))/(24*60*60)) AS total_uptime_days
+FROM CTE1
+WHERE stop_time IS NOT NULL
+AND session_status = 'start'
+;
