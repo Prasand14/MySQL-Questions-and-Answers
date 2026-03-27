@@ -1,0 +1,15 @@
+Day 23[March 27, 2026] - SQL
+https://datalemur.com/questions/alibaba-compressed-median
+
+WITH CumulativeData AS (
+    SELECT 
+        item_count,
+        order_occurrences,
+        SUM(order_occurrences) OVER (ORDER BY item_count) AS running_total,
+        SUM(order_occurrences) OVER () AS total_orders
+    FROM items_per_order
+)
+SELECT ROUND(AVG(item_count), 1) AS median
+FROM CumulativeData
+WHERE running_total >= total_orders / 2.0
+  AND running_total - order_occurrences <= total_orders / 2.0;
