@@ -1,0 +1,20 @@
+Day 24[March 28, 2026] - SQL  
+https://datalemur.com/questions/yoy-growth-rate
+
+WITH CTE1 AS (SELECT YEAR(transaction_date) as year,
+product_id,
+SUM(curr_year_spend) AS curr_year_spend
+FROM user_transactions
+GROUP BY 1,2),
+CTE2 AS (SELECT year,
+  product_id,
+  curr_year_spend,
+  LAG(curr_year_spend,1) OVER (PARTITION BY product_id ORDER BY year) AS prev_year_spend
+FROM
+CTE1)
+SELECT year,
+  product_id,
+  curr_year_spend,
+  prev_year_spend,
+  CASE WHEN prev_year_spend IS NOT NULL THEN ROUND((curr_year_spend-prev_year_spend)*100.0/prev_year_spend,2) END AS yoy_rate
+FROM CTE2;
