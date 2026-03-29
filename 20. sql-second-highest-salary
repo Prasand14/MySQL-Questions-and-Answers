@@ -1,0 +1,9 @@
+Day 25 [March 29, 2026] - SQL
+https://datalemur.com/questions/sql-second-highest-salary
+
+WITH CTE1 AS (SELECT *,
+  ROW_NUMBER() OVER (ORDER BY salary DESC) AS rnk
+FROM employee)
+SELECT DISTINCT salary
+FROM CTE1
+WHERE rnk = 2;
