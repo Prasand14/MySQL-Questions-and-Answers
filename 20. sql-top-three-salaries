@@ -1,0 +1,19 @@
+
+Day 26 [March 30, 2026] - SQL
+https://datalemur.com/questions/sql-top-three-salaries
+
+WITH CTE1 AS (SELECT 
+t2.department_name,
+t1.name,
+t1.salary,
+DENSE_RANK() OVER (PARTITION BY t2.department_name ORDER BY t1.salary DESC) as rnk
+FROM employee t1
+LEFT JOIN department t2 
+  ON t1.department_id = t2.department_id)
+SELECT department_name,
+name,
+salary
+FROM CTE1
+WHERE rnk <= 3
+ORDER BY 1 ASC, 3 DESC, 4 ASC
+;
