@@ -1,0 +1,7 @@
+Day 28 [April 1, 2026] - SQL
+https://datalemur.com/questions/sql-page-with-no-likes
+
+SELECT distinct page_id
+FROM pages
+where page_id not in (SELECT page_id FROM page_likes)
+ORDER BY 1;
