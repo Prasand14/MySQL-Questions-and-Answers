@@ -1,0 +1,7 @@
+Day 31 [April 5 2026] - SQL
+https://datalemur.com/questions/matching-skills
+SELECT DISTINCT candidate_id
+FROM candidates
+WHERE candidate_id IN (SELECT candidate_id FROM candidates WHERE skill = 'Python')
+and candidate_id IN (SELECT candidate_id FROM candidates WHERE skill = 'Tableau')
+and candidate_id IN (SELECT candidate_id FROM candidates WHERE skill = 'PostgreSQL');
