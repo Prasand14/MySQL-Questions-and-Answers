@@ -1,0 +1,14 @@
+Day 33 [April 8 2026] - SQL
+https://datalemur.com/questions/sql-bloomberg-stock-monthly-change
+
+SELECT 
+    ticker,
+    date,
+    close,
+    ROUND(
+        (close - LAG(close) OVER (PARTITION BY ticker ORDER BY date)) 
+        / LAG(close) OVER (PARTITION BY ticker ORDER BY date) 
+        * 100.0, 
+    2) AS intermth_change_pct
+FROM stock_prices
+ORDER BY 1, 2;
