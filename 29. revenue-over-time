@@ -1,0 +1,19 @@
+Day 34 [April 9 2026] - SQL
+https://platform.stratascratch.com/coding/10314-revenue-over-time?code_type=3
+
+WITH CTE1 AS (
+    SELECT 
+        DATE_FORMAT(created_at, '%Y-%m') AS purchase_month,
+        SUM(purchase_amt) AS total_purchase
+    FROM amazon_purchases
+    WHERE purchase_amt > 0  -- Excludes returns
+    GROUP BY 1
+)
+SELECT 
+    purchase_month,
+    AVG(total_purchase) OVER (
+        ORDER BY purchase_month 
+        ROWS BETWEEN 2 PRECEDING AND CURRENT ROW
+    ) AS rolling_average
+FROM CTE1
+ORDER BY purchase_month;
