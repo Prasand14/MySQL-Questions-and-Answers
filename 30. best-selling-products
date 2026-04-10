@@ -1,0 +1,17 @@
+Day 35 [April 10 2026] - SQL
+https://datalemur.com/questions/best-selling-products
+
+WITH cte_1 as (SELECT t1.category_name,
+t1.product_name,
+ROW_NUMBER() OVER 
+  (PARTITION BY t1.category_name 
+  ORDER BY t2.sales_quantity desc, t2.rating desc) as rnk
+FROM products t1
+LEFT JOIN product_sales t2
+  ON t1.product_id = t2.product_id)
+SELECT category_name,
+product_name
+FROM cte_1
+WHERE rnk = 1
+ORDER BY 1
+;
